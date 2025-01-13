@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Website</title>
+    <style>
+        header {
+            padding: 10px 0;
+            display: flex;
+            background-color: grey;
+            align-items: center;
+        }
+        .logo {
+            max-width: 100px; /* Adjust this value as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-right: 15px; /* Space between the image and text */
+        }
+        .section {
+            margin-top: 20px;
+        }
+        #product-list {
+            display: grid; /* Use grid layout */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 10px; /* Space between grid items */
+        }
+        .product-box {
+            height: 300px; /* Set a fixed height for the product box */
+            border: 1px solid #ccc; /* Optional: Add a border */
+            padding: 10px; /* Padding inside the box */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Space out content vertically */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="images/uno logo.png" alt="Company Logo" class="logo"> 
+    <input type="text" id="search" placeholder="Search items...">
+    <button id="search-btn">Search</button> <!-- Add a button for search -->
+</header>
+
+<!-- Section for Smart TVs -->
+<div class="section" id="smart-tvs-section">
+    <h2>Smart TVs</h2>
+    <div id="smart-tvs-list" class="product-list"></div>
+</div>
+
+<!-- Section for Refrigerators -->
+<div class="section" id="refrigerators-section">
+    <h2>Refrigerators</h2>
+    <div id="refrigerators-list" class="product-list"></div>
+</div>
+
+<script>
+    // Combined data array for search functionality
+    let combinedData = [];
+
+    // Fetch data from the external JSON file (jumia smart tvs.json)
+    fetch('jumia%20smart%20tvs.json')
+        .then(response => response.json())
+        .then(data1 => {
+            // Display the first five items from the Smart TVs JSON
+            displayProducts(data1.image.slice(0, 5), 'smart-tvs-list');
+            combinedData.push(...data1.image); // Add to combined data
+        })
+        .catch(error => console.error('Error loading Smart TVs JSON:', error));
+
+    // Fetch data from the second JSON file (jumia.json)
+    fetch('jumia.json')
+        .then(response => response.json())
+        .then(data2 => {
+            // Display the first five items from the Refrigerators JSON
+            displayProducts(data2.picture.slice(0, 5), 'refrigerators-list');
+            combinedData.push(...data2.picture); // Add to combined data
+        })
+        .catch(error => console.error('Error loading Refrigerators JSON:', error));
+
+    function displayProducts(products, containerId) {
+        const productList = document.getElementById(containerId);
+        productList.innerHTML = ""; 
+
+        products.forEach(product => {
+            const productBox = document.createElement("div");
+            productBox.classList.add("product-box");
+
+            const productImage = document.createElement("img");
+            productImage.src = product.image;
+            productBox.appendChild(productImage);
+
+            const productLink = document.createElement("a");
+            productLink.href = product.url || "#"; // Use product URL or fallback to '#'
+            productLink.target = "_blank"; // Open in a new tab
+
+            const productName = document.createElement("div");
+            productName.textContent = product.nameprice || product.name;
+            productLink.appendChild(productName);
+            
+            productBox.appendChild(productLink);
+
+            if (product.price) {
+                const productPrice = document.createElement("div");
+                productPrice.textContent = product.price; 
+                productBox.appendChild(productPrice);
+            }
+
+            productList.appendChild(productBox);
+        });
+    }
+
+    // Search functionality
+    const searchInput = document.getElementById("search");
+    const searchButton = document.getElementById("search-btn");
+
+    searchButton.addEventListener("click", function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        // Store combined data and search term in local storage
+        localStorage.setItem('combinedData', JSON.stringify(combinedData));
+        localStorage.setItem('searchTerm', searchTerm);
+
+        // Redirect to the search results page
+        window.location.href = 'search-results.html';
+    });
+
+    // Optional: Allow searching with Enter key
+    searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchButton.click(); // Trigger click event on button
+        }
+    });
+</script>
+
+</body>
+</html>

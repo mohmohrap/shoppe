@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <style>
-        /* Include your CSS styles here */
         .product-box {
             width: 200px;
             height: 300px;
@@ -33,7 +32,7 @@
 <section id="product-list"></section>
 
 <script>
-    // Retrieve combined data and search term from local storage
+    // Retrieve combined data from local storage
     const combinedData = JSON.parse(localStorage.getItem('combinedData')) || [];
     const searchTerm = localStorage.getItem('searchTerm');
 
@@ -49,28 +48,37 @@
             productImage.src = product.image;
             productBox.appendChild(productImage);
 
+            const productLink = document.createElement("a");
+            productLink.href = product.url || "#"; // Use URL or fallback to '#'
+            
             const productName = document.createElement("div");
             productName.textContent = product.nameprice || product.name;
-            productBox.appendChild(productName);
 
-            if (product.price) {
+            // Append name to link
+            productLink.appendChild(productName);
+            
+             // Append link to box
+             productBox.appendChild(productLink);
+
+             if (product.price) {
                 const productPrice = document.createElement("div");
                 productPrice.textContent = product.price; 
                 productBox.appendChild(productPrice);
-            }
+             }
 
-            productList.appendChild(productBox);
-        });
-    }
+             // Append box to list
+             productList.appendChild(productBox);
+         });
+     }
 
-    // Filter products based on the search term
-    const filteredData = combinedData.filter(product => 
-        (product.name && product.name.toLowerCase().includes(searchTerm)) || 
-        (product.nameprice && product.nameprice.toLowerCase().includes(searchTerm))
-    );
+     // Filter products based on the search term
+     const filteredData = combinedData.filter(product => 
+         (product.name && product.name.toLowerCase().includes(searchTerm)) || 
+         (product.nameprice && product.nameprice.toLowerCase().includes(searchTerm))
+     );
 
-    displayProducts(filteredData);
-</script>
+     displayProducts(filteredData);
+ </script>
 
 </body>
 </html>

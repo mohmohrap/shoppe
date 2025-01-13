@@ -5,34 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Website</title>
     <style>
-        header {
-            
-            padding: 10px 0;
-            display: flex;
-            background-color: grey;
-            align-items: center;
-        }
-        .product {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .product img {
-            max-width: 150px;
-            margin-right: 20px;
-        }
-        .product a {
-            color: blue;
-            text-decoration: none;
-        }
-        .logo {
+header {        
+    padding: 10px 0;
+    display: flex;
+    background-color: grey;
+    align-items: center;
+}
+.product {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.product img {
+    max-width: 150px;
+    margin-right: 20px;
+}
+.product a {
+    color: blue;
+    text-decoration: none;
+}
+.logo {
     max-width: 100px; /* Adjust this value as needed */
     height: auto; /* Maintain aspect ratio */
     float: left; /* Aligns the image to the left */
     margin-right: 15px; /* Space between the image and text */
+}
+.product-list {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 10px; /* Space between grid items */
+    margin-top: 20px; /* Space above the product list */
 }
 .product-box {
     width: 200px; /* Set a fixed width for the product box */
@@ -44,7 +49,11 @@
     flex-direction: column;
     justify-content: space-between; /* Space out content vertically */
 }
-
+.product-box img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensure proper image fitting */
+}
 .product-name {
     overflow: hidden; /* Hide overflow text */
     white-space: nowrap; /* Prevent text from wrapping */
@@ -61,10 +70,8 @@
     margin-top: 20px; /* Space above the product list */
 }
 .section {
-            margin-top: 20px;
-        }
-
-
+    margin-top: 20px;
+}
     </style>
 </head>
 <body>
@@ -72,6 +79,8 @@
     <header>
         <img src="images/uno logo.png" alt="Company Logo" class="logo"> 
         <input type="text" id="search" placeholder="Search items...">
+        <button id="search-btn">Search</button>
+
     </header>
 
     <!-- Section for Smart TVs -->
@@ -92,16 +101,16 @@
         .then(response => response.json())
         .then(data1 => {
             // Display the first five items from the Smart TVs JSON
-            displayProducts(data1.image.slice(0, 5), 'smart-tvs-list');
+            displayProducts(data1.image.slice(0, 10), 'smart-tvs-list');
         })
         .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
     // Fetch data from the second JSON file (jumia.json)
-    fetch('jumia.json')
+    fetch('jumia fridges.json')
         .then(response => response.json())
         .then(data2 => {
             // Display the first five items from the Refrigerators JSON
-            displayProducts(data2.picture.slice(0, 5), 'refrigerators-list');
+            displayProducts(data2.picture.slice(0, 10), 'refrigerators-list');
         })
         .catch(error => console.error('Error loading Refrigerators JSON:', error));
 
@@ -113,12 +122,25 @@
             const productBox = document.createElement("div");
             productBox.classList.add("product-box");
 
+            // Create clickable anchor
+            const productLink = document.createElement("a");
+            productLink.href = product.link || "#"; // Set the link or a default
+            productLink.target = "_blank"; // Open in a new tab
+
             const productImage = document.createElement("img");
             productImage.src = product.image;
             productBox.appendChild(productImage);
 
             const productName = document.createElement("div");
             productName.textContent = product.nameprice || product.name;
+
+            // Truncate product name to 30 characters
+            const fullName = product.nameprice || product.name || "";
+            const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
+            productName.textContent = truncatedName;
+
+            productBox.appendChild(productName);
+
             productBox.appendChild(productName);
 
             if (product.price) {
@@ -127,11 +149,40 @@
                 productBox.appendChild(productPrice);
             }
 
+            // Wrap productBox inside the productLink
             productList.appendChild(productBox);
+
+            //Append productLink to productList
+            //productList.appendChild(productLink);
+            
         });
     }
+    // Search functionality
+    const searchInput = document.getElementById("search");
+    const searchButton = document.getElementById("search-btn");
+
+    searchButton.addEventListener("click", function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        // Store combined data and search term in local storage
+        localStorage.setItem('combinedData', JSON.stringify(combinedData));
+        localStorage.setItem('searchTerm', searchTerm);
+
+        // Redirect to the search results page
+        window.location.href = 'search-results.html';
+    });
+
+    // Optional: Allow searching with Enter key
+    searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchButton.click(); // Trigger click event on button
+        }
+    });
+
 </script>
     
 
 </body>
 </html>
+
+
