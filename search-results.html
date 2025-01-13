@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        /* Include your CSS styles here */
+        .product-box {
+            width: 200px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Search Results</h1>
+</header>
+
+<section id="product-list"></section>
+
+<script>
+    // Retrieve combined data and search term from local storage
+    const combinedData = JSON.parse(localStorage.getItem('combinedData')) || [];
+    const searchTerm = localStorage.getItem('searchTerm');
+
+    function displayProducts(data) {
+        const productList = document.getElementById("product-list");
+        productList.innerHTML = ""; 
+
+        data.forEach(product => {
+            const productBox = document.createElement("div");
+            productBox.classList.add("product-box");
+
+            const productImage = document.createElement("img");
+            productImage.src = product.image;
+            productBox.appendChild(productImage);
+
+            const productName = document.createElement("div");
+            productName.textContent = product.nameprice || product.name;
+            productBox.appendChild(productName);
+
+            if (product.price) {
+                const productPrice = document.createElement("div");
+                productPrice.textContent = product.price; 
+                productBox.appendChild(productPrice);
+            }
+
+            productList.appendChild(productBox);
+        });
+    }
+
+    // Filter products based on the search term
+    const filteredData = combinedData.filter(product => 
+        (product.name && product.name.toLowerCase().includes(searchTerm)) || 
+        (product.nameprice && product.nameprice.toLowerCase().includes(searchTerm))
+    );
+
+    displayProducts(filteredData);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Website</title>
+    <style>
+        header {
+            
+            padding: 10px 0;
+            display: flex;
+            background-color: grey;
+            align-items: center;
+        }
+        .product {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .product img {
+            max-width: 150px;
+            margin-right: 20px;
+        }
+        .product a {
+            color: blue;
+            text-decoration: none;
+        }
+        .logo {
+    max-width: 100px; /* Adjust this value as needed */
+    height: auto; /* Maintain aspect ratio */
+    float: left; /* Aligns the image to the left */
+    margin-right: 15px; /* Space between the image and text */
+}
+.product-box {
+    width: 200px; /* Set a fixed width for the product box */
+    height: 300px; /* Set a fixed height for the product box */
+    border: 1px solid #ccc; /* Optional: Add a border */
+    margin: 10px; /* Space between product boxes */
+    padding: 10px; /* Padding inside the box */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space out content vertically */
+}
+
+.product-name {
+    overflow: hidden; /* Hide overflow text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+}
+
+.product-price {
+    font-weight: bold; /* Make price bold for emphasis */
+}
+#product-list {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 10px; /* Space between grid items */
+    margin-top: 20px; /* Space above the product list */
+}
+.section {
+            margin-top: 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images/uno logo.png" alt="Company Logo" class="logo"> 
+        <input type="text" id="search" placeholder="Search items...">
+    </header>
+
+    <!-- Section for Smart TVs -->
+<div class="section" id="smart-tvs-section">
+    <h2>Smart TVs</h2>
+    <div id="smart-tvs-list" class="product-list"></div>
+</div>
+
+<!-- Section for Refrigerators -->
+<div class="section" id="refrigerators-section">
+    <h2>Refrigerators</h2>
+    <div id="refrigerators-list" class="product-list"></div>
+</div>
+
+<script>
+    // Fetch data from the external JSON file (jumia smart tvs.json)
+    fetch('jumia%20smart%20tvs.json')
+        .then(response => response.json())
+        .then(data1 => {
+            // Display the first five items from the Smart TVs JSON
+            displayProducts(data1.image.slice(0, 5), 'smart-tvs-list');
+        })
+        .catch(error => console.error('Error loading Smart TVs JSON:', error));
+
+    // Fetch data from the second JSON file (jumia.json)
+    fetch('jumia.json')
+        .then(response => response.json())
+        .then(data2 => {
+            // Display the first five items from the Refrigerators JSON
+            displayProducts(data2.picture.slice(0, 5), 'refrigerators-list');
+        })
+        .catch(error => console.error('Error loading Refrigerators JSON:', error));
+
+    function displayProducts(products, containerId) {
+        const productList = document.getElementById(containerId);
+        productList.innerHTML = ""; 
+
+        products.forEach(product => {
+            const productBox = document.createElement("div");
+            productBox.classList.add("product-box");
+
+            const productImage = document.createElement("img");
+            productImage.src = product.image;
+            productBox.appendChild(productImage);
+
+            const productName = document.createElement("div");
+            productName.textContent = product.nameprice || product.name;
+            productBox.appendChild(productName);
+
+            if (product.price) {
+                const productPrice = document.createElement("div");
+                productPrice.textContent = product.price; 
+                productBox.appendChild(productPrice);
+            }
+
+            productList.appendChild(productBox);
+        });
+    }
+</script>
+    
+
+</body>
+</html>
