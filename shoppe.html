@@ -5,85 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Website</title>
     <style>
-header {        
-    padding: 10px 0;
-    display: flex;
-    background-color: grey;
-    align-items: center;
-}
-.product {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-}
-.product img {
-    max-width: 150px;
-    margin-right: 20px;
-}
-.product a {
-    color: blue;
-    text-decoration: none;
-}
-.logo {
-    max-width: 100px; /* Adjust this value as needed */
-    height: auto; /* Maintain aspect ratio */
-    float: left; /* Aligns the image to the left */
-    margin-right: 15px; /* Space between the image and text */
-}
-.product-list {
-    display: grid; /* Use grid layout */
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 10px; /* Space between grid items */
-    margin-top: 20px; /* Space above the product list */
-}
-.product-box {
-    width: 200px; /* Set a fixed width for the product box */
-    height: 300px; /* Set a fixed height for the product box */
-    border: 1px solid #ccc; /* Optional: Add a border */
-    margin: 10px; /* Space between product boxes */
-    padding: 10px; /* Padding inside the box */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Space out content vertically */
-}
-.product-box img {
-    max-width: 100%;
-    height: auto;
-    object-fit: cover; /* Ensure proper image fitting */
-}
-.product-name {
-    overflow: hidden; /* Hide overflow text */
-    white-space: nowrap; /* Prevent text from wrapping */
-    text-overflow: ellipsis; /* Add ellipsis for truncated text */
-}
-
-.product-price {
-    font-weight: bold; /* Make price bold for emphasis */
-}
-#product-list {
-    display: grid; /* Use grid layout */
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 10px; /* Space between grid items */
-    margin-top: 20px; /* Space above the product list */
-}
-.section {
-    margin-top: 20px;
-}
+        header {        
+            padding: 10px 0;
+            display: flex;
+            background-color: grey;
+            align-items: center;
+            gap: 10px; /* Space between elements */
+        }
+        .logo {
+            max-width: 100px; /* Adjust this value as needed */
+            height: auto; /* Maintain aspect ratio */
+            float: left; /* Aligns the image to the left */
+            margin-right: 15px; /* Space between the image and text */
+        }
+        .product-list {
+            display: grid; /* Use grid layout */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 3px; /* Space between grid items */
+            margin-top: 20px; /* Space above the product list */
+        }
+        .product-box {
+            width: 150px; /* Set a fixed width for the product box */
+            height: 200px; /* Set a fixed height for the product box */
+            border: 1px solid #ccc; /* Optional: Add a border */
+            padding: 10px; /* Padding inside the box */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Space out content vertically */
+        }
+        .product-box img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover; /* Ensure proper image fitting */
+        }
+        .product-name {
+            overflow: hidden; /* Hide overflow text */
+            white-space: nowrap; /* Prevent text from wrapping */
+            text-overflow: ellipsis; /* Add ellipsis for truncated text */
+            font-size: 14px; /* Adjust font size if needed */
+        }
+        .product-price {
+            font-weight: bold; /* Make price bold for emphasis */
+        }
+        .section {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="images/uno logo.png" alt="Company Logo" class="logo"> 
-        <input type="text" id="search" placeholder="Search items...">
-        <button id="search-btn">Search</button>
+<header>
+    <img src="images/uno logo.png" alt="Company Logo" class="logo">
+    <input type="text" id="search" placeholder="Search items...">
+    <button id="search-btn">Search</button>
+    <select id="category-filter">
+        <option value="all">All Categories</option>
+        <option value="smart-tvs">Smart TVs</option>
+        <option value="refrigerators">Refrigerators</option>
+    </select>
+</header>
 
-    </header>
-
-    <!-- Section for Smart TVs -->
+<!-- Section for Smart TVs -->
 <div class="section" id="smart-tvs-section">
     <h2>Smart TVs</h2>
     <div id="smart-tvs-list" class="product-list"></div>
@@ -96,22 +78,15 @@ header {
 </div>
 
 <script>
-    // Fetch data from the external JSON file (jumia smart tvs.json)
+    // Fetch data from external JSON files
     fetch('jumia%20smart%20tvs.json')
         .then(response => response.json())
-        .then(data1 => {
-            // Display the first five items from the Smart TVs JSON
-            displayProducts(data1.image.slice(0, 10), 'smart-tvs-list');
-        })
+        .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
         .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
-    // Fetch data from the second JSON file (jumia.json)
     fetch('jumia fridges.json')
         .then(response => response.json())
-        .then(data2 => {
-            // Display the first five items from the Refrigerators JSON
-            displayProducts(data2.picture.slice(0, 10), 'refrigerators-list');
-        })
+        .then(data2 => displayProducts(data2.picture.slice(0, 10), 'refrigerators-list'))
         .catch(error => console.error('Error loading Refrigerators JSON:', error));
 
     function displayProducts(products, containerId) {
@@ -122,67 +97,57 @@ header {
             const productBox = document.createElement("div");
             productBox.classList.add("product-box");
 
-            // Create clickable anchor
             const productLink = document.createElement("a");
-            productLink.href = product.link || "#"; // Set the link or a default
-            productLink.target = "_blank"; // Open in a new tab
+            productLink.href = product.url || "#";
+            productLink.target = "_blank";
 
             const productImage = document.createElement("img");
             productImage.src = product.image;
+            productImage.alt = product.name || "Product Image"; 
             productBox.appendChild(productImage);
 
             const productName = document.createElement("div");
-            productName.textContent = product.nameprice || product.name;
+            productName.classList.add("product-name");
 
-            // Truncate product name to 30 characters
             const fullName = product.nameprice || product.name || "";
             const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
             productName.textContent = truncatedName;
-
-            productBox.appendChild(productName);
-
             productBox.appendChild(productName);
 
             if (product.price) {
                 const productPrice = document.createElement("div");
-                productPrice.textContent = product.price; 
+                productPrice.classList.add("product-price");
+                productPrice.textContent = product.price;
                 productBox.appendChild(productPrice);
             }
 
-            // Wrap productBox inside the productLink
-            productList.appendChild(productBox);
-
-            //Append productLink to productList
-            //productList.appendChild(productLink);
-            
+            productLink.appendChild(productBox);
+            productList.appendChild(productLink);
         });
     }
+
     // Search functionality
     const searchInput = document.getElementById("search");
     const searchButton = document.getElementById("search-btn");
+    const categoryFilter = document.getElementById("category-filter");
 
     searchButton.addEventListener("click", function() {
         const searchTerm = searchInput.value.toLowerCase();
-        
-        // Store combined data and search term in local storage
-        localStorage.setItem('combinedData', JSON.stringify(combinedData));
-        localStorage.setItem('searchTerm', searchTerm);
+        const selectedCategory = categoryFilter.value;
 
-        // Redirect to the search results page
+        // Save data in localStorage for filtering
+        localStorage.setItem('searchTerm', searchTerm);
+        localStorage.setItem('selectedCategory', selectedCategory);
+
         window.location.href = 'search-results.html';
     });
 
-    // Optional: Allow searching with Enter key
     searchInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
-            searchButton.click(); // Trigger click event on button
+            searchButton.click();
         }
     });
-
 </script>
-    
 
 </body>
 </html>
-
-

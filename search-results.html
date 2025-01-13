@@ -5,21 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <style>
+        header {
+            padding: 10px 0;
+            display: flex;
+            background-color: grey;
+            align-items: center;
+        }
+        .product-list {
+            display: grid; /* Use grid layout */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 3px; /* Space between grid items */
+            margin-top: 20px; /* Space above the product list */
+        }
         .product-box {
-            width: 200px;
-            height: 300px;
-            border: 1px solid #ccc;
-            margin: 10px;
-            padding: 10px;
+            width: 150px; /* Set a fixed width for the product box */
+            height: 200px; /* Set a fixed height for the product box */
+            border: 1px solid #ccc; /* Optional: Add a border */
+            padding: 10px; /* Padding inside the box */
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-between; /* Space out content vertically */
         }
-        #product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
+        .product-box img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover; /* Ensure proper image fitting */
+        }
+        .product-name {
+            overflow: hidden; /* Hide overflow text */
+            white-space: nowrap; /* Prevent text from wrapping */
+            text-overflow: ellipsis; /* Add ellipsis for truncated text */
+            font-size: 14px; /* Adjust font size if needed */
+        }
+        .product-price {
+            font-weight: bold; /* Make price bold for emphasis */
         }
     </style>
 </head>
@@ -29,56 +48,83 @@
     <h1>Search Results</h1>
 </header>
 
-<section id="product-list"></section>
+<!-- Product List Section -->
+<div id="search-results" class="product-list"></div>
 
 <script>
-    // Retrieve combined data from local storage
-    const combinedData = JSON.parse(localStorage.getItem('combinedData')) || [];
-    const searchTerm = localStorage.getItem('searchTerm');
+    // Retrieve the search term and selected category from localStorage
+    const searchTerm = localStorage.getItem('searchTerm') || "";
+    const selectedCategory = localStorage.getItem('selectedCategory') || "all";
 
-    function displayProducts(data) {
-        const productList = document.getElementById("product-list");
-        productList.innerHTML = ""; 
+    // Fetch data for both categories
+    Promise.all([
+        fetch('jumia%20smart%20tvs.json').then(res => res.json()),
+        fetch('jumia%20fridges.json').then(res => res.json())
+    ])
+    .then(([smartTvsData, fridgesData]) => {
+        // Combine data based on category
+        let combinedData = [];
+        if (selectedCategory === "all" || selectedCategory === "smart-tvs") {
+            combinedData = combinedData.concat(smartTvsData.image);
+        }
+        if (selectedCategory === "all" || selectedCategory === "refrigerators") {
+            combinedData = combinedData.concat(fridgesData.picture);
+        }
 
-        data.forEach(product => {
+        // Filter products by search term
+        const filteredProducts = combinedData.filter(product => {
+            const name = product.nameprice || product.name || "";
+            return name.toLowerCase().includes(searchTerm);
+        });
+
+        // Display filtered results
+        displaySearchResults(filteredProducts);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+    function displaySearchResults(products) {
+        const resultsContainer = document.getElementById("search-results");
+        resultsContainer.innerHTML = "";
+
+        if (products.length === 0) {
+            // Show a "no results" message if no matches found
+            resultsContainer.innerHTML = "<p>No results found for your search.</p>";
+            return;
+        }
+
+        products.forEach(product => {
             const productBox = document.createElement("div");
             productBox.classList.add("product-box");
 
+            const productLink = document.createElement("a");
+            productLink.href = product.url || "#";
+            productLink.target = "_blank";
+
             const productImage = document.createElement("img");
             productImage.src = product.image;
+            productImage.alt = product.name || "Product Image";
             productBox.appendChild(productImage);
 
-            const productLink = document.createElement("a");
-            productLink.href = product.url || "#"; // Use URL or fallback to '#'
-            
             const productName = document.createElement("div");
-            productName.textContent = product.nameprice || product.name;
+            productName.classList.add("product-name");
 
-            // Append name to link
-            productLink.appendChild(productName);
-            
-             // Append link to box
-             productBox.appendChild(productLink);
+            const fullName = product.nameprice || product.name || "";
+            const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
+            productName.textContent = truncatedName;
+            productBox.appendChild(productName);
 
-             if (product.price) {
+            if (product.price) {
                 const productPrice = document.createElement("div");
-                productPrice.textContent = product.price; 
+                productPrice.classList.add("product-price");
+                productPrice.textContent = product.price;
                 productBox.appendChild(productPrice);
-             }
+            }
 
-             // Append box to list
-             productList.appendChild(productBox);
-         });
-     }
-
-     // Filter products based on the search term
-     const filteredData = combinedData.filter(product => 
-         (product.name && product.name.toLowerCase().includes(searchTerm)) || 
-         (product.nameprice && product.nameprice.toLowerCase().includes(searchTerm))
-     );
-
-     displayProducts(filteredData);
- </script>
+            productLink.appendChild(productBox);
+            resultsContainer.appendChild(productLink);
+        });
+    }
+</script>
 
 </body>
 </html>
