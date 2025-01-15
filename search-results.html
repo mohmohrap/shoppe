@@ -1,130 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
-    <style>
-        header {
-            padding: 10px 0;
-            display: flex;
-            background-color: grey;
-            align-items: center;
-        }
-        .product-list {
-            display: grid; /* Use grid layout */
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
-            gap: 3px; /* Space between grid items */
-            margin-top: 20px; /* Space above the product list */
-        }
-        .product-box {
-            width: 150px; /* Set a fixed width for the product box */
-            height: 200px; /* Set a fixed height for the product box */
-            border: 1px solid #ccc; /* Optional: Add a border */
-            padding: 10px; /* Padding inside the box */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Space out content vertically */
-        }
-        .product-box img {
-            max-width: 100%;
-            height: auto;
-            object-fit: cover; /* Ensure proper image fitting */
-        }
-        .product-name {
-            overflow: hidden; /* Hide overflow text */
-            white-space: nowrap; /* Prevent text from wrapping */
-            text-overflow: ellipsis; /* Add ellipsis for truncated text */
-            font-size: 14px; /* Adjust font size if needed */
-        }
-        .product-price {
-            font-weight: bold; /* Make price bold for emphasis */
-        }
-    </style>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
+
 </head>
+
 <body>
 
-<header>
-    <h1>Search Results</h1>
-</header>
+    <header>
+        <h1>Search Results</h1>
+    </header>
 
-<!-- Product List Section -->
-<div id="search-results" class="product-list"></div>
+    <!-- Product List Section -->
+    <div id="search-results" class="product-list"></div>
 
-<script>
-    // Retrieve the search term and selected category from localStorage
-    const searchTerm = localStorage.getItem('searchTerm') || "";
-    const selectedCategory = localStorage.getItem('selectedCategory') || "all";
+    <script>
+        // Retrieve the search term and selected category from localStorage
+        const searchTerm = localStorage.getItem('searchTerm') || "";
+        const selectedCategory = localStorage.getItem('selectedCategory') || "all";
 
-    // Fetch data for both categories
-    Promise.all([
-        fetch('jumia%20smart%20tvs.json').then(res => res.json()),
-        fetch('jumia%20fridges.json').then(res => res.json())
-    ])
-    .then(([smartTvsData, fridgesData]) => {
-        // Combine data based on category
-        let combinedData = [];
-        if (selectedCategory === "all" || selectedCategory === "smart-tvs") {
-            combinedData = combinedData.concat(smartTvsData.image);
-        }
-        if (selectedCategory === "all" || selectedCategory === "refrigerators") {
-            combinedData = combinedData.concat(fridgesData.picture);
-        }
+        // Fetch data for both categories
+        Promise.all([
+            fetch('jumia%20smart%20tvs.json').then(res => res.json()),
+            fetch('jumia%20fridges.json').then(res => res.json())
+        ])
+            .then(([smartTvsData, fridgesData]) => {
+                // Combine data based on category
+                let combinedData = [];
+                if (selectedCategory === "all" || selectedCategory === "smart-tvs") {
+                    combinedData = combinedData.concat(smartTvsData.image);
+                }
+                if (selectedCategory === "all" || selectedCategory === "refrigerators") {
+                    combinedData = combinedData.concat(fridgesData.picture);
+                }
 
-        // Filter products by search term
-        const filteredProducts = combinedData.filter(product => {
-            const name = product.nameprice || product.name || "";
-            return name.toLowerCase().includes(searchTerm);
-        });
+                // Filter products by search term
+                const filteredProducts = combinedData.filter(product => {
+                    const name = product.nameprice || product.name || "";
+                    return name.toLowerCase().includes(searchTerm);
+                });
 
-        // Display filtered results
-        displaySearchResults(filteredProducts);
-    })
-    .catch(error => console.error('Error fetching data:', error));
+                // Display filtered results
+                displaySearchResults(filteredProducts);
+            })
+            .catch(error => console.error('Error fetching data:', error));
 
-    function displaySearchResults(products) {
-        const resultsContainer = document.getElementById("search-results");
-        resultsContainer.innerHTML = "";
+        function displaySearchResults(products) {
+            const resultsContainer = document.getElementById("search-results");
+            resultsContainer.innerHTML = "";
 
-        if (products.length === 0) {
-            // Show a "no results" message if no matches found
-            resultsContainer.innerHTML = "<p>No results found for your search.</p>";
-            return;
-        }
-
-        products.forEach(product => {
-            const productBox = document.createElement("div");
-            productBox.classList.add("product-box");
-
-            const productLink = document.createElement("a");
-            productLink.href = product.url || "#";
-            productLink.target = "_blank";
-
-            const productImage = document.createElement("img");
-            productImage.src = product.image;
-            productImage.alt = product.name || "Product Image";
-            productBox.appendChild(productImage);
-
-            const productName = document.createElement("div");
-            productName.classList.add("product-name");
-
-            const fullName = product.nameprice || product.name || "";
-            const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
-            productName.textContent = truncatedName;
-            productBox.appendChild(productName);
-
-            if (product.price) {
-                const productPrice = document.createElement("div");
-                productPrice.classList.add("product-price");
-                productPrice.textContent = product.price;
-                productBox.appendChild(productPrice);
+            if (products.length === 0) {
+                // Show a "no results" message if no matches found
+                resultsContainer.innerHTML = "<p>No results found for your search.</p>";
+                return;
             }
 
-            productLink.appendChild(productBox);
-            resultsContainer.appendChild(productLink);
-        });
-    }
-</script>
+            products.forEach(product => {
+                const productBox = document.createElement("div");
+                productBox.classList.add("product-box");
+
+                const productLink = document.createElement("a");
+                productLink.href = product.url || "#";
+                productLink.target = "_blank";
+
+                const productImage = document.createElement("img");
+                productImage.src = product.image;
+                productImage.alt = product.name || "Product Image";
+                productBox.appendChild(productImage);
+
+                const productName = document.createElement("div");
+                productName.classList.add("product-name");
+
+                const fullName = product.nameprice || product.name || "";
+                const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
+                productName.textContent = truncatedName;
+                productBox.appendChild(productName);
+
+                if (product.price) {
+                    const productPrice = document.createElement("div");
+                    productPrice.classList.add("product-price");
+                    productPrice.textContent = product.price;
+                    productBox.appendChild(productPrice);
+                }
+
+                productLink.appendChild(productBox);
+                resultsContainer.appendChild(productLink);
+            });
+        }
+    </script>
 
 </body>
+
 </html>

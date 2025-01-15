@@ -1,0 +1,39 @@
+make sections swipe by store 
+
+Top 20 Categories for a New Shopping Site in Kenya (County-Specific Focus):
+
+Electronics & Gadgets:
+Smartphones, laptops, tablets, TVs, headphones, speakers, power banks
+Fashion & Apparel:
+Men's, women's, and children's clothing, shoes, accessories (jewelry, watches, bags)
+Home & Kitchen:
+Furniture, decor, appliances (refrigerators, microwaves, blenders), kitchenware, bedding
+Beauty & Personal Care:
+Cosmetics, skincare, hair care, fragrances, personal hygiene products
+Groceries & Food:
+Staples, fresh produce, packaged foods, beverages, household supplies
+Books, Music & Movies:
+Books, CDs, DVDs, online streaming subscriptions (if applicable)
+Baby & Kids:
+Toys, clothing, diapers, strollers, car seats, feeding essentials
+Sports & Outdoors:
+Sporting goods (balls, rackets), fitness equipment, camping gear, outdoor clothing
+Health & Wellness:
+Vitamins, supplements, healthcare products, medical equipment (if applicable)
+Automotive:
+Car parts, accessories, tires, motorbikes (if applicable)
+Furniture & Decor:
+Sofas, beds, tables, chairs, home decor items, lighting
+Pet Supplies:
+Food, toys, grooming supplies, accessories
+Travel & Tourism:
+Flights, hotels, travel packages, tours (if applicable)
+Education & Learning:
+Books, stationery, online courses, educational toys
+Tools & Hardware:
+Power tools, hand tools, building materials, plumbing supplies
+Gifts & Flowers:
+Gift cards, flowers, personalized gifts, occasion-specific gifts
+Watches & Jewelry:
+Watches, jewelry, accessories
+
