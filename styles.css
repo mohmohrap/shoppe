@@ -60,8 +60,8 @@ position: relative; /* Ensures dropdown is positioned relative to this container
 #subcategory-container {
     display: none; /* Initially hidden */
     position: absolute; /* Position it relative to the nearest positioned ancestor */
-    top: 100%; /* Place it below the header */
-    left: 0; /* Align it with the left of the header */
+   top: 0; /* Align with the top of the category filter */
+    left: 100%; /* Move it to the right of the category filter */
     background-color: white; /* Background for the dropdown */
     border: 1px solid #ccc; /* Optional: Add border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
