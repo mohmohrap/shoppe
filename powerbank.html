@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart TVs</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <img src="images/uno logo.png" alt="Company Logo" class="logo">
+        <input type="text" id="search" placeholder="Search items...">
+        <button id="search-btn">Search</button>
+        <div class="filters">
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+                <option value="electronics">Electronics & Gadgets</option>
+                <option value="fashion">Fashion & Apparel</option>
+            </select>
+            <div id="subcategory-container" style="display: none;">
+                <h4>Subcategories</h4>
+                <ul id="subcategory-list"></ul>
+            </div>
+        </div>
+    </header>
+    <div class="section" id="smart-tvs-section">
+        <h2>Powerbanks</h2>
+        <div id="smart-tvs-list" class="product-list"></div>
+    </div>
+
+    <script>
+        // Fetch all Smart TVs data
+        fetch('allPowerbanks.json')
+            .then(response => response.json())
+            .then(data => displayProducts(data.image, 'smart-tvs-list'))
+            .catch(error => console.error('Error loading Smart TVs JSON:', error));
+
+        function displayProducts(products, containerId) {
+            const productList = document.getElementById(containerId);
+            productList.innerHTML = "";
+
+            products.forEach(product => {
+                const productBox = document.createElement("div");
+                productBox.classList.add("product-box");
+
+                const productLink = document.createElement("a");
+                productLink.href = product.url || "#";
+                productLink.target = "_blank";
+
+                const productImage = document.createElement("img");
+                productImage.src = product.image;
+                productImage.alt = product.name || "Product Image";
+                productBox.appendChild(productImage);
+
+                const productName = document.createElement("div");
+                productName.classList.add("product-name");
+
+                const fullName = product.nameprice || product.name || "";
+                const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
+                productName.textContent = truncatedName;
+                productBox.appendChild(productName);
+
+                if (product.price) {
+                    const productPrice = document.createElement("div");
+                    productPrice.classList.add("product-price");
+                    productPrice.textContent = product.price;
+                    productBox.appendChild(productPrice);
+                }
+
+                productLink.appendChild(productBox);
+                productList.appendChild(productLink);
+            });
+        }
+    </script>
+
+    <script src="categories.js">
+    </script>
+
+</body>
+
+</html>
