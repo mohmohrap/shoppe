@@ -35,7 +35,7 @@
         // Fetch all Smart TVs data
         fetch('allHeadphones.json')
             .then(response => response.json())
-            .then(data => displayProducts(data.image.slice(0, 10), 'smart-tvs-list'))
+            .then(data => displayProducts(data.image, 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         function displayProducts(products, containerId) {
@@ -53,6 +53,7 @@
                 const productImage = document.createElement("img");
                 productImage.src = product.image;
                 productImage.alt = product.name || "Product Image";
+                productImage.loading = "lazy"; // Enable lazy loading
                 productBox.appendChild(productImage);
 
                 const productName = document.createElement("div");
