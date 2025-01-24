@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart TVs</title>
+    <title>Speakers</title>
     <!-- Link to external CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <header>
-        <img src="images/uno logo.png" alt="Company Logo" class="logo">
+        <a href="shoppe.html"><img src="images/uno logo.png" alt="Company Logo" class="logo"></a>
         <input type="text" id="search" placeholder="Search items...">
         <button id="search-btn">Search</button>
         <div class="filters">
@@ -27,15 +27,15 @@
         </div>
     </header>
     <div class="section" id="smart-tvs-section">
-        <h2>Powerbanks</h2>
+        <h2>Speakers</h2>
         <div id="smart-tvs-list" class="product-list"></div>
     </div>
 
     <script>
         // Fetch all Smart TVs data
-        fetch('allPowerbanks.json')
+        fetch('allSpeakers.json')
             .then(response => response.json())
-            .then(data => displayProducts(data.image, 'smart-tvs-list'))
+            .then(data => displayProducts(data.image.slice(0, 10), 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         function displayProducts(products, containerId) {

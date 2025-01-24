@@ -13,6 +13,7 @@
 <body>
 
     <header>
+        <a href="shoppe.html"><img src="images/uno logo.png" alt="Company Logo" class="logo"></a>
         <h1>Search Results</h1>
     </header>
 
@@ -26,8 +27,12 @@
 
         // Fetch data for both categories
         Promise.all([
-            fetch('jumia%20smart%20tvs.json').then(res => res.json()),
-            fetch('jumia%20fridges.json').then(res => res.json())
+            fetch('allHeadphones.json').then(res => res.json()),
+            fetch('allLaptops.json').then(res => res.json()),            
+            fetch('allPowerbanks.json').then(res => res.json()),
+            fetch('allSmartphones.json').then(res => res.json()),
+            fetch('allSmartTvs.json').then(res => res.json()),
+            fetch('allSpeakers.json').then(res => res.json())
         ])
             .then(([smartTvsData, fridgesData]) => {
                 // Combine data based on category

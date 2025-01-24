@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Website</title>
+    <title>Headphones</title>
     <!-- Link to external CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-
     <header>
         <a href="shoppe.html"><img src="images/uno logo.png" alt="Company Logo" class="logo"></a>
         <input type="text" id="search" placeholder="Search items...">
@@ -21,59 +20,23 @@
                 <option value="electronics">Electronics & Gadgets</option>
                 <option value="fashion">Fashion & Apparel</option>
             </select>
-
-            <!-- Subcategories will be dynamically populated here -->
             <div id="subcategory-container" style="display: none;">
                 <h4>Subcategories</h4>
                 <ul id="subcategory-list"></ul>
             </div>
-
         </div>
     </header>
-
-    <!-- 
-    Section for Smart TVs 
     <div class="section" id="smart-tvs-section">
-        <h2>Smart TVs</h2>
+        <h2>Headphones</h2>
         <div id="smart-tvs-list" class="product-list"></div>
     </div>
 
-     Section for Refrigerators 
-    <div class="section" id="refrigerators-section">
-        <h2>Refrigerators</h2>
-        <div id="refrigerators-list" class="product-list"></div>
-    </div>
-    -->
-
     <script>
-        // Fetch data from external JSON files
+        // Fetch all Smart TVs data
         fetch('allHeadphones.json')
             .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
+            .then(data => displayProducts(data.image.slice(0, 10), 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
-
-        fetch('allLaptops.json')
-            .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
-            .catch(error => console.error('Error loading Refrigerators JSON:', error));
-        fetch('allPowerbanks.json')
-            .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
-            .catch(error => console.error('Error loading Smart TVs JSON:', error));
-
-        fetch('allSmartphones.json')
-            .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
-            .catch(error => console.error('Error loading Refrigerators JSON:', error));
-        fetch('allSmartTvs.json')
-            .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
-            .catch(error => console.error('Error loading Smart TVs JSON:', error));
-
-        fetch('allSpeakers.json')
-            .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
-            .catch(error => console.error('Error loading Refrigerators JSON:', error));
 
         function displayProducts(products, containerId) {
             const productList = document.getElementById(containerId);
@@ -111,29 +74,6 @@
                 productList.appendChild(productLink);
             });
         }
-
-        // Search functionality
-        const searchInput = document.getElementById("search");
-        const searchButton = document.getElementById("search-btn");
-        const categoryFilter = document.getElementById("category-filter");
-
-        searchButton.addEventListener("click", function () {
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategory = categoryFilter.value;
-
-            // Save data in localStorage for filtering
-            localStorage.setItem('searchTerm', searchTerm);
-            localStorage.setItem('selectedCategory', selectedCategory);
-
-            window.location.href = 'search-results.html';
-        });
-
-        searchInput.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                searchButton.click();
-            }
-        });
-
     </script>
 
     <script src="categories.js">
