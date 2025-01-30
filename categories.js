@@ -22,44 +22,51 @@ const subcategoryFilter = document.getElementById("category-filter");
 const subcategoryContainer = document.getElementById("subcategory-container");
 const subcategoryList = document.getElementById("subcategory-list");
 
-let lastSelectedCategory = ""; // Store the last selected category
+// Detect if mobile
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 
 // Listen for category selection
-subcategoryFilter.addEventListener("click", function () {
+subcategoryFilter.addEventListener("change", function () {
     const selectedCategory = subcategoryFilter.value;
+    subcategoryList.innerHTML = ""; // Clear previous subcategories
 
-    // Clear previous subcategories only if the selection is different
-    if (selectedCategory !== lastSelectedCategory || subcategoryContainer.style.display === "none") {
-        subcategoryList.innerHTML = ""; // Clear the subcategory list
+    if (selectedCategory !== "all" && categories[selectedCategory]) {
+        if (isMobile) {
+            // Create a dropdown (select) for mobile
+            const subcategorySelect = document.createElement("select");
+            subcategorySelect.id = "subcategory-dropdown";
+            subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
+            
+            categories[selectedCategory].forEach(subcategory => {
+                const option = document.createElement("option");
+                option.value = subcategory.page;
+                option.textContent = subcategory.name;
+                subcategorySelect.appendChild(option);
+            });
 
-        if (selectedCategory !== "all" && categories[selectedCategory]) {
-            // Populate subcategories
+            subcategorySelect.addEventListener("change", function () {
+                if (subcategorySelect.value) {
+                    window.location.href = subcategorySelect.value;
+                }
+            });
+
+            subcategoryList.appendChild(subcategorySelect);
+            subcategoryList.style.display = "block"; 
+        } else {
+            // Create a floating list for desktop
             categories[selectedCategory].forEach(subcategory => {
                 const listItem = document.createElement("li");
                 listItem.textContent = subcategory.name;
                 listItem.style.cursor = "pointer";
                 listItem.addEventListener("click", () => {
-                    // Redirect to subcategory page
                     window.location.href = subcategory.page;
                 });
                 subcategoryList.appendChild(listItem);
             });
 
-            // Show the subcategories container
             subcategoryContainer.style.display = "block";
-        } else {
-            // Hide the subcategories container if "All Categories" is selected
-            subcategoryContainer.style.display = "none";
         }
-
-        lastSelectedCategory = selectedCategory; // Update the last selected category
-    }
-});
-
-// Close dropdown when clicking outside
-document.addEventListener("click", function (event) {
-    if (!subcategoryContainer.contains(event.target) && !subcategoryFilter.contains(event.target)) {
+    } else {
         subcategoryContainer.style.display = "none";
-        lastSelectedCategory = ""; // Reset the last selected category
     }
 });

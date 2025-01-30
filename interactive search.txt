@@ -1,0 +1,70 @@
+const searchInput = document.getElementById("search");
+const suggestionsBox = document.getElementById("search-suggestions");
+
+// Assuming a single JSON file with all products
+let allProducts = [];
+
+fetch('allProducts.json') // Replace with your actual JSON
+    .then(response => response.json())
+    .then(data => allProducts = data)
+    .catch(error => console.error('Error loading products:', error));
+
+// Show suggestions while typing
+searchInput.addEventListener("input", function () {
+    const query = searchInput.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (query) {
+        const filteredProducts = allProducts.filter(product =>
+            product.name.toLowerCase().includes(query)
+        );
+
+        filteredProducts.slice(0, 5).forEach(product => {
+            const suggestion = document.createElement("div");
+            suggestion.textContent = product.name;
+            suggestion.addEventListener("click", () => {
+                window.location.href = product.url || "#";
+            });
+            suggestionsBox.appendChild(suggestion);
+        });
+
+        suggestionsBox.style.display = "block";
+    } else {
+        suggestionsBox.style.display = "none";
+    }
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener("click", function (event) {
+    if (!suggestionsBox.contains(event.target) && event.target !== searchInput) {
+        suggestionsBox.style.display = "none";
+    }
+});
+
+
+
+.suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 90%;
+    z-index: 1000;
+    display: none;
+}
+
+.suggestions div {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.suggestions div:hover {
+    background: #f0f0f0;
+}
+
+
+
+<input type="text" id="search" placeholder="Search items...">
+<div id="search-suggestions" class="suggestions"></div>
