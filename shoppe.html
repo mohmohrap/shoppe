@@ -81,30 +81,30 @@
         // Fetch data from external JSON files
         fetch('allHeadphones.json')
             .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
+            .then(data1 => displayProducts(data1.slice(0, 10), 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         fetch('allLaptops.json')
             .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
+            .then(data2 => displayProducts(data2.slice(0, 10), 'refrigerators-list'))
             .catch(error => console.error('Error loading Refrigerators JSON:', error));
         fetch('allPowerbanks.json')
             .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
+            .then(data1 => displayProducts(data1.slice(0, 10), 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         fetch('allSmartphones.json')
             .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
+            .then(data2 => displayProducts(data2.slice(0, 10), 'refrigerators-list'))
             .catch(error => console.error('Error loading Refrigerators JSON:', error));
         fetch('allSmartTvs.json')
             .then(response => response.json())
-            .then(data1 => displayProducts(data1.image.slice(0, 10), 'smart-tvs-list'))
+            .then(data1 => displayProducts(data1.slice(0, 10), 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         fetch('allSpeakers.json')
             .then(response => response.json())
-            .then(data2 => displayProducts(data2.image.slice(0, 10), 'refrigerators-list'))
+            .then(data2 => displayProducts(data2.slice(0, 10), 'refrigerators-list'))
             .catch(error => console.error('Error loading Refrigerators JSON:', error));
 
         function displayProducts(products, containerId) {

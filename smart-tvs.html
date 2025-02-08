@@ -35,7 +35,7 @@
         // Fetch all Smart TVs data
         fetch('allSmartTvs.json')
             .then(response => response.json())
-            .then(data => displayProducts(data.image, 'smart-tvs-list'))
+            .then(data => displayProducts(data, 'smart-tvs-list'))
             .catch(error => console.error('Error loading Smart TVs JSON:', error));
 
         function displayProducts(products, containerId) {

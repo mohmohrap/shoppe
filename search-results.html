@@ -34,20 +34,28 @@
             fetch('allSmartTvs.json').then(res => res.json()),
             fetch('allSpeakers.json').then(res => res.json())
         ])
-            .then(([smartTvsData, fridgesData]) => {
+            .then(([headphones, laptops,powerbanks,smartphones,smarttvs,speakers]) => {
+                const categoryData = {
+                    headphones,
+                    laptops,
+                    powerbanks,
+                    smartphones,
+                    smarttvs,
+                    speakers
+                };
                 // Combine data based on category
                 let combinedData = [];
-                if (selectedCategory === "all" || selectedCategory === "smart-tvs") {
+                if (selectedCategory === "all" ) {
                     combinedData = combinedData.concat(smartTvsData.image);
                 }
-                if (selectedCategory === "all" || selectedCategory === "refrigerators") {
-                    combinedData = combinedData.concat(fridgesData.picture);
-                }
+               else {
+                combinedData = combinedData[selectedCategory]||[];
+               }
 
                 // Filter products by search term
                 const filteredProducts = combinedData.filter(product => {
-                    const name = product.nameprice || product.name || "";
-                    return name.toLowerCase().includes(searchTerm);
+                    const name = product.name?.toLowerCase || "";
+                    return name.includes(searchTerm);
                 });
 
                 // Display filtered results
