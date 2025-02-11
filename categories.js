@@ -24,49 +24,70 @@ const subcategoryList = document.getElementById("subcategory-list");
 
 // Detect if mobile
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+// Create mobile menu elements
+if (isMobile) {
+    // Add close button
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "close-btn";
+    closeBtn.innerHTML = "&times;";
+    closeBtn.addEventListener("click", () => {
+        subcategoryContainer.classList.remove("active");
+        document.querySelector('.menu-overlay')?.remove();
+    });
+    subcategoryContainer.prepend(closeBtn);
 
-// Listen for category selection
+    // Add overlay
+    subcategoryContainer.insertAdjacentHTML('afterend', '<div class="menu-overlay"></div>');
+    document.querySelector('.menu-overlay').addEventListener('click', () => {
+        subcategoryContainer.classList.remove("active");
+        document.querySelector('.menu-overlay').style.display = 'none';
+    });
+}
+
 subcategoryFilter.addEventListener("change", function () {
     const selectedCategory = subcategoryFilter.value;
-    subcategoryList.innerHTML = ""; // Clear previous subcategories
+    subcategoryList.innerHTML = "";
 
     if (selectedCategory !== "all" && categories[selectedCategory]) {
-        if (isMobile) {
-            // Create a dropdown (select) for mobile
-            const subcategorySelect = document.createElement("select");
-            subcategorySelect.id = "subcategory-dropdown";
-            subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
-            
-            categories[selectedCategory].forEach(subcategory => {
-                const option = document.createElement("option");
-                option.value = subcategory.page;
-                option.textContent = subcategory.name;
-                subcategorySelect.appendChild(option);
-            });
-
-            subcategorySelect.addEventListener("change", function () {
-                if (subcategorySelect.value) {
-                    window.location.href = subcategorySelect.value;
+        categories[selectedCategory].forEach(subcategory => {
+            const listItem = document.createElement(isMobile ? "div" : "li");
+            listItem.className = "subcategory-item";
+            listItem.textContent = subcategory.name;
+            listItem.addEventListener("click", () => {
+                window.location.href = subcategory.page;
+                if (isMobile) {
+                    subcategoryContainer.classList.remove("active");
+                    document.querySelector('.menu-overlay')?.remove();
                 }
             });
+            subcategoryList.appendChild(listItem);
+        });
 
-            subcategoryList.appendChild(subcategorySelect);
-            subcategoryList.style.display = "block"; 
-        } else {
-            // Create a floating list for desktop
-            categories[selectedCategory].forEach(subcategory => {
-                const listItem = document.createElement("li");
-                listItem.textContent = subcategory.name;
-                listItem.style.cursor = "pointer";
-                listItem.addEventListener("click", () => {
-                    window.location.href = subcategory.page;
-                });
-                subcategoryList.appendChild(listItem);
-            });
-
+        if (isMobile) {
+            subcategoryContainer.classList.add("active");
+            document.querySelector('.menu-overlay').style.display = 'block';
             subcategoryContainer.style.display = "block";
+        } else {
+            subcategoryContainer.style.display = "block";
+            // Position under the category filter
+            const filterRect = subcategoryFilter.getBoundingClientRect();
+            subcategoryContainer.style.top = `${filterRect.bottom + window.scrollY}px`;
+            subcategoryContainer.style.left = `${filterRect.left}px`;
         }
     } else {
         subcategoryContainer.style.display = "none";
+        if (isMobile) {
+            document.querySelector('.menu-overlay')?.remove();
+        }
     }
 });
+
+// Close subcategories when clicking outside (desktop)
+if (!isMobile) {
+    document.addEventListener("click", (e) => {
+        if (!subcategoryContainer.contains(e.target) &&
+            e.target !== subcategoryFilter) {
+            subcategoryContainer.style.display = "none";
+        }
+    });
+}

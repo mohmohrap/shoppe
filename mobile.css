@@ -28,7 +28,8 @@ header {
 
 .category-grid {
     display: grid;
-    grid-template-columns: 1fr;  /* Stack categories on mobile */
+    grid-template-columns: 1fr;
+    /* Stack categories on mobile */
     gap: 10px;
 }
 
@@ -51,7 +52,7 @@ header {
 }
 
 /* Ensure mobile subcategory dropdown shows properly */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     #subcategory-list {
         display: block;
     }
@@ -62,4 +63,4 @@ header {
         padding: 10px;
         font-size: 16px;
     }
-}
+}*/

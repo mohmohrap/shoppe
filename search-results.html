@@ -20,91 +20,46 @@
     <!-- Product List Section -->
     <div id="search-results" class="product-list"></div>
 
+    <script src="search.js"></script>
     <script>
         // Retrieve the search term and selected category from localStorage
         const searchTerm = localStorage.getItem('searchTerm') || "";
         const selectedCategory = localStorage.getItem('selectedCategory') || "all";
 
-        // Fetch data for both categories
-        Promise.all([
-            fetch('allHeadphones.json').then(res => res.json()),
-            fetch('allLaptops.json').then(res => res.json()),            
-            fetch('allPowerbanks.json').then(res => res.json()),
-            fetch('allSmartphones.json').then(res => res.json()),
-            fetch('allSmartTvs.json').then(res => res.json()),
-            fetch('allSpeakers.json').then(res => res.json())
-        ])
-            .then(([headphones, laptops,powerbanks,smartphones,smarttvs,speakers]) => {
-                const categoryData = {
-                    headphones,
-                    laptops,
-                    powerbanks,
-                    smartphones,
-                    smarttvs,
-                    speakers
-                };
-                // Combine data based on category
-                let combinedData = [];
-                if (selectedCategory === "all" ) {
-                    combinedData = combinedData.concat(smartTvsData.image);
-                }
-               else {
-                combinedData = combinedData[selectedCategory]||[];
-               }
+        fetchData().then(([headphones, laptops, powerbanks, smartphones, smarttvs, speakers]) => {
+            const categoryData = {
+                headphones: headphones.products,
+                laptops: laptops.products,
+                powerbanks: powerbanks.products,
+                smartphones: smartphones.products,
+                smarttvs: smarttvs.products,
+                speakers: speakers.products
+            };
 
-                // Filter products by search term
-                const filteredProducts = combinedData.filter(product => {
-                    const name = product.name?.toLowerCase || "";
-                    return name.includes(searchTerm);
-                });
-
-                // Display filtered results
-                displaySearchResults(filteredProducts);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        function displaySearchResults(products) {
-            const resultsContainer = document.getElementById("search-results");
-            resultsContainer.innerHTML = "";
-
-            if (products.length === 0) {
-                // Show a "no results" message if no matches found
-                resultsContainer.innerHTML = "<p>No results found for your search.</p>";
-                return;
+            // Combine data based on category
+            let combinedData = [];
+            if (selectedCategory === "all") {
+                combinedData = [
+                    ...categoryData.headphones,
+                    ...categoryData.laptops,
+                    ...categoryData.powerbanks,
+                    ...categoryData.smartphones,
+                    ...categoryData.smarttvs,
+                    ...categoryData.speakers
+                ];
+            } else {
+                combinedData = categoryData[selectedCategory];
             }
 
-            products.forEach(product => {
-                const productBox = document.createElement("div");
-                productBox.classList.add("product-box");
+            // Filter products based on search term
+            const filteredProducts = combinedData.filter(product => 
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
 
-                const productLink = document.createElement("a");
-                productLink.href = product.url || "#";
-                productLink.target = "_blank";
-
-                const productImage = document.createElement("img");
-                productImage.src = product.image;
-                productImage.alt = product.name || "Product Image";
-                productBox.appendChild(productImage);
-
-                const productName = document.createElement("div");
-                productName.classList.add("product-name");
-
-                const fullName = product.nameprice || product.name || "";
-                const truncatedName = fullName.length > 34 ? fullName.slice(0, 34) + "..." : fullName;
-                productName.textContent = truncatedName;
-                productBox.appendChild(productName);
-
-                if (product.price) {
-                    const productPrice = document.createElement("div");
-                    productPrice.classList.add("product-price");
-                    productPrice.textContent = product.price;
-                    productBox.appendChild(productPrice);
-                }
-
-                productLink.appendChild(productBox);
-                resultsContainer.appendChild(productLink);
-            });
-        }
+            // Display filtered products
+            displayProducts(filteredProducts, 'search-results');
+        })
+        .catch(error => console.error('Error loading JSON files:', error));
     </script>
 
 <script src="mobile.js">
