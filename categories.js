@@ -23,7 +23,8 @@ const subcategoryContainer = document.getElementById("subcategory-container");
 const subcategoryList = document.getElementById("subcategory-list");
 
 // Detect if mobile
-const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+const mobileRegex = /Mobi|Android|iPhone|iPad|iPod/;
+const isMobile = mobileRegex.test(navigator.userAgent);
 // Create mobile menu elements
 if (isMobile) {
     // Add close button
@@ -31,7 +32,10 @@ if (isMobile) {
     closeBtn.className = "close-btn";
     closeBtn.innerHTML = "&times;";
     closeBtn.addEventListener("click", () => {
-        subcategoryContainer.classList.remove("active");
+        const menuOverlay = document.querySelector('.menu-overlay');
+        if (menuOverlay) {
+            menuOverlay.remove();
+        }
         document.querySelector('.menu-overlay')?.remove();
     });
     subcategoryContainer.prepend(closeBtn);
@@ -45,7 +49,7 @@ if (isMobile) {
 }
 
 subcategoryFilter.addEventListener("change", function () {
-    const selectedCategory = subcategoryFilter.value;
+    const selectedCategory = subcategoryFilter.value.trim().toLowerCase();
     subcategoryList.innerHTML = "";
 
     if (selectedCategory !== "all" && categories[selectedCategory]) {
