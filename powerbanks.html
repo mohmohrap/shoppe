@@ -35,11 +35,14 @@
     <script src="mobile.js"></script>
     <script src="search.js"></script>
     <script>
-        // Fetch and display powerbanks
-        fetch('allPowerbanks.json')
-            .then(response => response.json())
-            .then(data => displayProducts(data.products, 'powerbanks-list'))
-            .catch(error => console.error('Error loading Powerbanks JSON:', error));
+        // // Fetch and display powerbanks
+        // fetch('allPowerbanks.json')
+        //     .then(response => response.json())
+        //     .then(data => displayProducts(data.products, 'powerbanks-list'))
+        //     .catch(error => console.error('Error loading Powerbanks JSON:', error));
+        fetchData().then(([headphones, laptops, powerbanks, smartphones, smarttvs, speakers]) => {
+            displayProducts(powerbanks.products, 'powerbanks-list');
+        });
     </script>
 </body>
 
